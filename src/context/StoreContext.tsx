@@ -8,6 +8,7 @@ type StoreContextValue = {
   updateQuantity: (id: string, quantity: number) => void
   removeFromCart: (id: string) => void
   toggleFavorite: (id: string) => void
+  clearCart: () => void
   cartCount: number
   subtotal: number
 }
@@ -40,6 +41,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     updateQuantity: (id: string, quantity: number) => setCart((current) => current.map((item) => item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item)),
     removeFromCart: (id: string) => setCart((current) => current.filter((item) => item.id !== id)),
     toggleFavorite: (id: string) => setFavorites((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]),
+    clearCart: () => setCart([]),
     cartCount: cart.reduce((total, item) => total + item.quantity, 0),
     subtotal: cart.reduce((total, item) => total + item.price * item.quantity, 0),
   }), [cart, favorites])

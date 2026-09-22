@@ -17,3 +17,9 @@ export type Product = {
 }
 
 export type CartItem = Product & { quantity: number }
+
+export type ChatMessage = {
+  text: string
+  role: 'user' | 'bot'
+  productIds?: string[]
+}
