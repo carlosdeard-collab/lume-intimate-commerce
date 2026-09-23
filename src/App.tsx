@@ -7,6 +7,7 @@ import { AgeGate } from './components/AgeGate'
 import { ScrollToTop } from './components/ScrollToTop'
 import { StoreProvider } from './context/StoreContext'
 import InfoPage from './pages/InfoPage'
+import Categories from './pages/Categories'
 
 const Home = lazy(() => import('./pages/Home'))
 const Catalog = lazy(() => import('./pages/Catalog'))
@@ -25,6 +26,7 @@ function Shell() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/catalogo" element={<Catalog />} />
+          <Route path="/categorias" element={<Categories />} />
           <Route path="/categoria/:category" element={<Catalog />} />
           <Route path="/producto/:slug" element={<ProductPage />} />
           <Route path="/carrito" element={<Cart />} />

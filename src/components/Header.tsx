@@ -9,7 +9,7 @@ export function Header() {
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
-  const links = [['Colección', '/catalogo'], ['Categorías', '/categoria/estimulación'], ['Nuestra historia', '/nosotros'], ['Ayuda', '/faq']]
+  const links = [['Colección', '/catalogo'], ['Categorías', '/categorias'], ['Nuestra historia', '/nosotros'], ['Ayuda', '/faq']]
 
   useEffect(() => {
     if (!open) return
