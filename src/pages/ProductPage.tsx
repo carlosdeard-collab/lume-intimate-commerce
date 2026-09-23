@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { Minus, Plus, ShoppingBag, ArrowUpRight } from 'lucide-react'
+import { Minus, Plus, ShoppingBag, ArrowUpRight, ArrowLeft } from 'lucide-react'
 import { ProductCard } from '../components/ProductCard'
 import { products } from '../data/products'
 import { useStore } from '../context/StoreContext'
@@ -8,15 +8,29 @@ import { formatPrice, whatsappLink } from '../config'
 
 export default function ProductPage() {
   const { slug } = useParams()
-  const product = products.find((item) => item.slug === slug) || products[0]
+  const product = products.find((item) => item.slug === slug)
   const { addToCart } = useStore()
   const [imageIndex, setImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const navigate = useNavigate()
 
   useEffect(() => {
-    document.title = `${product.name} — Lume`
-  }, [product.name])
+    document.title = product ? `${product.name} — Lume` : 'Producto no encontrado — Lume'
+  }, [product])
+
+  if (!product) {
+    return (
+      <main className="product-page">
+        <button className="back-link" type="button" onClick={() => navigate(-1)}>
+          <ArrowLeft size={16} /> Volver a Colección
+        </button>
+        <div className="empty-state">
+          <h1>Producto no encontrado.</h1>
+          <Link className="button button-primary" to="/catalogo">Ver colección</Link>
+        </div>
+      </main>
+    )
+  }
 
   const relatedProducts = products
     .filter((item) => item.id !== product.id)
@@ -29,8 +43,11 @@ export default function ProductPage() {
 
   return (
     <main className="product-page">
+      <button className="back-link product-back" type="button" onClick={() => navigate(-1)}>
+        <ArrowLeft size={16} /> Volver a Colección
+      </button>
       <div className="breadcrumbs">
-        <Link to="/catalogo">Colección</Link>
+        <span>Colección</span>
         <span>/</span>
         {product.name}
       </div>

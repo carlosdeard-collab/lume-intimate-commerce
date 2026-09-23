@@ -1,14 +1,22 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { ArrowRight, ChevronDown, ChevronUp, ShieldCheck } from 'lucide-react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { ProductCard } from '../components/ProductCard'
 import { categories, products } from '../data/products'
 
 export default function Catalog() {
   const { category } = useParams()
-  const [sort, setSort] = useState('featured')
-  const [query, setQuery] = useState('')
-  const [openFilters, setOpenFilters] = useState(false)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const sort = searchParams.get('ordenar') || 'featured'
+  const query = searchParams.get('buscar') || ''
+  const openFilters = searchParams.get('filtros') === 'abiertos'
+
+  const updateCollectionState = (key: string, value: string | null) => {
+    const next = new URLSearchParams(searchParams)
+    if (value) next.set(key, value)
+    else next.delete(key)
+    setSearchParams(next, { replace: true })
+  }
 
   useEffect(() => {
     document.title = category ? `${category.charAt(0).toUpperCase() + category.slice(1)} — Lume` : 'Colección — Lume'
@@ -36,14 +44,14 @@ export default function Catalog() {
       <div className="catalog-toolbar">
         <div className="search-field">
           <span>Buscar</span>
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Nombre, categoría..." aria-label="Buscar productos" />
+          <input value={query} onChange={(event) => updateCollectionState('buscar', event.target.value)} placeholder="Nombre, categoría..." aria-label="Buscar productos" />
         </div>
-        <button className="filter-mobile" onClick={() => setOpenFilters(!openFilters)}>
+        <button className="filter-mobile" onClick={() => updateCollectionState('filtros', openFilters ? null : 'abiertos')}>
           Filtros {openFilters ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </button>
         <label className="sort-field">
           Ordenar por{' '}
-          <select value={sort} onChange={(event) => setSort(event.target.value)}>
+          <select value={sort} onChange={(event) => updateCollectionState('ordenar', event.target.value)}>
             <option value="featured">Destacados</option>
             <option value="low">Precio menor</option>
             <option value="high">Precio mayor</option>
